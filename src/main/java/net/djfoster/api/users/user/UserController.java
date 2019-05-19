@@ -32,9 +32,9 @@ public class UserController {
     User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
         return repository.findById(id)
                 .map(user -> {
-                    newUser.setUsername(newUser.getUsername());
-                    newUser.setEmail(newUser.getEmail());
-                    return repository.save(newUser);
+                    user.setUsername(newUser.getUsername());
+                    user.setEmail(newUser.getEmail());
+                    return repository.save(user);
                 })
                 .orElseGet(() -> {
                     newUser.setId(id);
