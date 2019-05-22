@@ -28,8 +28,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    Resources<Resource<User>> all() {
-        List<Resource<User>> users = repository.findAll().stream()
+    public Resources<Resource<User>> all() {
+        List<User> userList = repository.findAll();
+        List<Resource<User>> users = userList.stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
 
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    Resource<User> one(@PathVariable Long id) {
+    public Resource<User> one(@PathVariable Long id) {
         User user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return this.assembler.toResource(user);
@@ -55,27 +56,18 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     ResponseEntity<?> replaceUser(@RequestBody User newUser, @PathVariable Long id) throws URISyntaxException {
-        try{
-            User updatedUser = repository.findById(id)
-                    .map(user -> {
-                        user.setUsername(newUser.getUsername());
-                        user.setEmail(newUser.getEmail());
-                        return repository.save(user);
-                    })
-                    .orElseGet(() -> {
-                        return null;
-                    });
-            Resource<User> resource = assembler.toResource(updatedUser);
+        User updatedUser = repository.findById(id)
+                .map(user -> {
+                    user.setUsername(newUser.getUsername());
+                    user.setEmail(newUser.getEmail());
+                    return repository.save(user);
+                })
+                .orElseThrow(() -> new UserNotFoundException(id));
+        Resource<User> resource = assembler.toResource(updatedUser);
 
-            return ResponseEntity
-                    .created(new URI(resource.getId().expand().getHref()))
-                    .body(resource);
-        }catch (NullPointerException e)
-        {
-            throw new UserNotFoundException(id);
-        }
-
-
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
     @DeleteMapping("/users/{id}")
