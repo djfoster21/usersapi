@@ -1,4 +1,4 @@
-#A Simple Users API
+# A Simple Users API
 
 Made with Java 8 and Springboot (2.1.5)
 
@@ -7,7 +7,7 @@ Database used: H2
 Base URI: http://localhost:8080
 
 
-###Endpoints implemented
+### Endpoints implemented
 
 **GET /users**
 
