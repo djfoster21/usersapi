@@ -27,11 +27,11 @@ _Body_
 }
 ```
 
-**GET /users/<user-id>**
+**GET /users/`<user-id>`**
 
 Returns the user that matches the given id
 
-**PUT /users/<user-id>**
+**PUT /users/`<user-id>`**
 
 Modifies the user that matches the given id
 
@@ -45,7 +45,7 @@ _Body_
 }
 ```
 
-**DELETE /users/<user-id>**
+**DELETE /users/`<user-id>`**
 
 Deletes the user that matches the given id
 
