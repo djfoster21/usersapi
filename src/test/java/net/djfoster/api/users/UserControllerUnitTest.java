@@ -26,7 +26,6 @@ import java.util.Random;
 
 import static java.util.Optional.empty;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -59,12 +58,10 @@ public class UserControllerUnitTest {
 
         List<User> usersList = Arrays.asList(user);
         Mockito.when(repository.findAll()).thenReturn(usersList);
-        Mockito.when(assembler.toResource(any(User.class))).then((Answer<Resource<User>>) invocation -> {
-            return new Resource<>(user,
-                    linkTo(methodOn(UserController.class).one(user.getId())).withSelfRel(),
-                    linkTo(methodOn(UserController.class).all()).withRel("users")
-                    );
-        });
+        Mockito.when(assembler.toResource(any(User.class))).then((Answer<Resource<User>>) invocation -> new Resource<>(user,
+                linkTo(methodOn(UserController.class).one(user.getId())).withSelfRel(),
+                linkTo(methodOn(UserController.class).all()).withRel("users")
+                ));
         Mockito.when(repository.findById((long) 1)).thenReturn(java.util.Optional.of(user));
         Mockito.when(repository.findById((long) 2)).thenReturn(empty());
         Mockito.when(repository.save(any(User.class))).then((Answer<User>) invocation -> {
